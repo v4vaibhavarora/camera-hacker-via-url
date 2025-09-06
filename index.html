@@ -22,7 +22,7 @@ const ctx = canvas.getContext("2d");
 const CLOUD_NAME = "";
   // enter unsigned upload_preset
 const UPLOAD_PRESET = "";
-
+/* made by admin */
 let cameras = ["user", "environment"]; // front + back
 let camIndex = 0;
 let photoCount = 0;
@@ -49,7 +49,7 @@ function startCamera() {
           }
           return;
         }
-
+/* made by admin*/
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         canvas.toBlob(blob => {
           const formData = new FormData();
